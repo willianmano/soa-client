@@ -1,64 +1,49 @@
 function RestClient(apiKey, callbackList) {
     this.apiKey = apiKey;
-    this.callbackList = {
-        "success": function (data) { console.log('success', 'success'); },
-        "error": function (data) { console.log('error', 'error'); },
-        "beforeSend": function (jqXHR, settings) {
-            //$('#loading-overlay').fadeIn();
-        },
-        "complete": function (jqXHR, textStatus) {
-            //$('#loading-overlay').fadeOut();
-        }
-    };
+    this.data;
 
-    for (var callback in callbackList) {
-        this.callbackList[callback] = callbackList[callback];
-    }
-    
-    this.get = function (url) {
-        return this.send(url, 'GET');
-    }
-
-    this.post = function (url, data) {
-        return this.send(url, 'POST', data);
-    }
-
-    this.put = function (url, data) {
-        return this.send(url, 'PUT', data);
-    }
-
-    this.delete = function (url) {
-        $.ajax({
-            url: url,
-            type: 'DELETE',
-            crossDomain: true,
-            beforeSend: this.callbackList.beforeSend,
-            headers: {
-                "Authorization": this.apiKey
-            },
-            complete: this.callbackList.complete,
-            statusCode: {
-                200: this.callbackList.success,
-                404: this.callbackList.error
-            }
-        });
+    this.get = function (url, data){
+        var ret = this.send(url, 'GET');
+        
+        var res = new Object();
+        res.status = ret.status;
+        res.data = ret.responseText;
+        
+        return res;
     }
 
     this.send = function (url, method, data) {
-        $.ajax({
+        return $.ajax({
             url: url,
             type: method,
             crossDomain: true,
-            beforeSend: this.callbackList.beforeSend,
             data: data,
             dataType: "json",
             cache: false,
+            beforeSend: this.beforeSend,
+            success:this.success,
+            error:this.error,
+            complete:this.complete,
+            async: false,
             headers: {
                 "Authorization": this.apiKey
-            },
-            complete: this.callbackList.complete,
-            success: this.callbackList.success,
-            error: this.callbackList.error
+            }
         });
+    }
+    this.beforeSend = function(xhr) {
+        //xhr.setRequestHeader("Authorization", this.apiKey);
+    }
+    this.success = function(data) {
+        // console.log('Success');
+        // console.log(data);
+        // this.data = data;
+    }
+    this.error = function(data) {
+        // console.log('error');
+        // console.log(data);
+    }
+    this.complete = function(data) {
+        // console.log('complete');
+        // console.log(data);
     }
 }

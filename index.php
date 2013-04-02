@@ -50,11 +50,19 @@
         var client = new RestClient(apiKey);
         var result = client.get('http://soa.dev/teste');
 
-        //console.log(client);
-        // if (result.status == 'success') {
-        //     data = result.data;
-        //     $("#users").append('<p>'+data+'</p>');
-        // }
+        //console.log(result);
+
+        // var rest = new RestfulResource('http://soa.dev/teste', apiKey);
+        // var ret = rest.retrieve();
+
+       
+        
+        if (result.status == 200) {
+            var data = $.parseJSON(result.data);
+
+            $("#users").append('<p>'+data[0]+'</p>');
+            $("#users").append('<p>'+data[1]+'</p>');
+        }
     }
 
     $(document).ready(showUsers);

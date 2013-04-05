@@ -11,7 +11,15 @@ function RestClient(apiKey, callbackList) {
         
         return res;
     }
+    this.post = function (url, data) {
+        var ret = this.send(url, 'POST', data);
 
+        var res = new Object();
+        res.status = ret.status;
+        res.data = ret.responseText;
+
+        return ret;
+    }
     this.send = function (url, method, data) {
         return $.ajax({
             url: url,

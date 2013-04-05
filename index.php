@@ -2,14 +2,18 @@
 <html>
 <head>
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
 </head>
 
 <body>
-
 <div id="users"></div>
 
-<h1>Add user</h1>
-
+<h1>Login</h1>
+<form class="form-inline">
+  <input type="text" class="input-small" placeholder="Usuário" id="user">
+  <input type="password" class="input-small" placeholder="Senha" id="pass">
+  <a href="#" class="btn" id="login">Login</a>
+</form>
 
 <form id="addUser" class="form-horizontal">
   <fieldset>
@@ -50,13 +54,6 @@
         var client = new RestClient(apiKey);
         var result = client.get('http://soa.dev/teste');
 
-        //console.log(result);
-
-        // var rest = new RestfulResource('http://soa.dev/teste', apiKey);
-        // var ret = rest.retrieve();
-
-       
-        
         if (result.status == 200) {
             var data = $.parseJSON(result.data);
 
@@ -64,6 +61,25 @@
             $("#users").append('<p>'+data[1]+'</p>');
         }
     }
+
+    $('#login').click(function(){
+        user = $("#user").val();
+        pass = $("#pass").val();
+
+
+        data = '{"user": "'+user+'","password": "'+pass+'"}';
+        var client = new RestClient(apiKey);
+        var result = client.post('http://soa.dev/login', data);
+
+        var data = $.parseJSON(result.responseText);
+
+        
+        if (data['status'] == 'success') {
+            alert('login fuderoso');
+        } else {
+            alert('erro');
+        }
+    });
 
     $(document).ready(showUsers);
 </script>
